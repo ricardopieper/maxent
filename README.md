@@ -1,6 +1,5 @@
 maxent
 ===================
+A fork from https://github.com/tpeng/maxent, i copied and changed some code to work with intent training for NLU workloads.
 
-A simple implementation of maximum entropy IIS (improved iterative scaling) learning algorithm in Java.
-
-tpeng <pengtaoo@gmail.com>
+Needs some refactoring probably, I just followed the original's conventions.
