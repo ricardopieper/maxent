@@ -1,4 +1,4 @@
-package nlu;
+package maxent;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 public class InstanceNlu {
 
     public String label;
-    public nlu.NluFeature[] features;
+    public NluFeature[] features;
 
-    public InstanceNlu(String label, nlu.NluFeature[] bigrams) {
+    public InstanceNlu(String label, NluFeature[] bigrams) {
         this.label = label;
         this.features = bigrams;
     }
@@ -17,18 +17,18 @@ public class InstanceNlu {
         return label;
     }
 
-    public nlu.NluFeature[] getFeatures() {
+    public NluFeature[] getFeatures() {
         return features;
     }
 
     @Override
     public String toString() {
 
-        String f = Arrays.stream(features).map(nlu.NluFeature::toString).collect(Collectors.joining());
+        String f = Arrays.stream(features).map(NluFeature::toString).collect(Collectors.joining());
 
         return "Instance{" +
                 "label=" + label +
-                ", features=" + f +
+                ", maxent.features=" + f +
                 '}';
     }
 }

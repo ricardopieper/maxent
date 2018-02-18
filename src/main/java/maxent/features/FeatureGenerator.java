@@ -1,6 +1,6 @@
-package features;
+package maxent.features;
 
-import nlu.NluFeature;
+import maxent.NluFeature;
 import java.util.Collection;
 
 public interface FeatureGenerator  {

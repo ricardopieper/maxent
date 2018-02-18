@@ -1,4 +1,4 @@
-package nlu;
+package maxent;
 
 public class NluFeature {
 
