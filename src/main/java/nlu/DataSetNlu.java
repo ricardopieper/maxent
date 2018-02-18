@@ -1,12 +1,19 @@
 package nlu;
 
+import nlu.features.BigramGenerator;
+import nlu.features.FeatureGenerator;
+import nlu.features.PrefixGenerator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class DataSetNlu {
+
+    private static FeatureGenerator[] featureGenerators = new FeatureGenerator[] { new BigramGenerator(), new PrefixGenerator()};
 
     public static List<InstanceNlu> readDataSet(String path, BigramGenerator bigramGenerator) throws FileNotFoundException {
         File file = new File(path);
@@ -19,9 +26,11 @@ public class DataSetNlu {
 
             String label = split[0];
 
-            Bigram[] bigrams = bigramGenerator.generate(split[1]);
+            NluFeature[] allFeatures = Arrays.stream(featureGenerators)
+                    .flatMap(x -> x.generate(split[1]).stream())
+                    .toArray(NluFeature[]::new);
 
-            InstanceNlu instance = new InstanceNlu(label, bigrams);
+            InstanceNlu instance = new InstanceNlu(label, allFeatures);
             instances.add(instance);
         }
         return instances;

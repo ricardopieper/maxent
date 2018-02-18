@@ -1,7 +1,3 @@
-import nlu.Bigram;
-import nlu.BigramGenerator;
-import nlu.InstanceNlu;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
