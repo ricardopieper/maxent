@@ -1,4 +1,4 @@
-package nlu.features;
+package features;
 
 import nlu.NluFeature;
 

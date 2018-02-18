@@ -1,6 +1,6 @@
 package nlu;
 
-import nlu.features.BigramGenerator;
+import features.BigramGenerator;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -32,22 +32,22 @@ public class MaxEntNlu {
     // the weight to learn.
     private double w[];
 
-    private List<InstanceNlu> instances = new ArrayList<>();
+    private List<nlu.InstanceNlu> instances = new ArrayList<>();
 
     private List<FeatureFunctionNlu> functions = new ArrayList<>();
 
-    private List<NluFeature[]> features = new ArrayList<>();
+    private List<nlu.NluFeature[]> features = new ArrayList<>();
 
     private List<String> labels;
 
     public static void main(String... args) throws FileNotFoundException {
-        List<InstanceNlu> instances = DataSetNlu.readDataSet("examples/nlu.train", new BigramGenerator());
+        List<nlu.InstanceNlu> instances = nlu.DataSetNlu.readDataSet("examples/nlu.train", new BigramGenerator());
         MaxEntNlu me = new MaxEntNlu(instances);
         me.train();
 
-        List<InstanceNlu> trainInstances = DataSetNlu.readDataSet("examples/nlu.test", new BigramGenerator());
+        List<nlu.InstanceNlu> trainInstances = nlu.DataSetNlu.readDataSet("examples/nlu.test", new BigramGenerator());
         int pass = 0;
-        for (InstanceNlu instance : trainInstances) {
+        for (nlu.InstanceNlu instance : trainInstances) {
             String predict = me.classify(instance);
             if (predict.equals(instance.getLabel())) {
                 pass += 1;
@@ -57,7 +57,7 @@ public class MaxEntNlu {
         System.out.println("accuracy: " + 1.0 * pass / trainInstances.size());
     }
 
-    public MaxEntNlu(List<InstanceNlu> trainInstance) {
+    public MaxEntNlu(List<nlu.InstanceNlu> trainInstance) {
 
         instances.addAll(trainInstance);
         N = instances.size();
@@ -67,15 +67,15 @@ public class MaxEntNlu {
         calc_empirical_expects();
     }
 
-    private void createFeatFunctions(List<InstanceNlu> instances) {
+    private void createFeatFunctions(List<nlu.InstanceNlu> instances) {
 
-        for (InstanceNlu instance : instances) {
-            NluFeature[] f = instance.features;
+        for (nlu.InstanceNlu instance : instances) {
+            nlu.NluFeature[] f = instance.features;
             features.add(f);
         }
 
-        for (InstanceNlu instance : instances) {
-            NluFeature[] f = instance.features;
+        for (nlu.InstanceNlu instance : instances) {
+            nlu.NluFeature[] f = instance.features;
             for (int j = 0; j < f.length; j++) {
                 functions.add(new FeatureFunctionNlu(j, f[j], instance.label));
             }
@@ -129,7 +129,7 @@ public class MaxEntNlu {
         }
     }
 
-    private String classify(InstanceNlu instance) {
+    private String classify(nlu.InstanceNlu instance) {
 
         double max = 0;
         String label = "";
@@ -149,9 +149,9 @@ public class MaxEntNlu {
 
     private void calc_empirical_expects() {
 
-        for (InstanceNlu instance : instances) {
+        for (nlu.InstanceNlu instance : instances) {
             String y = instance.getLabel();
-            NluFeature[] features = instance.getFeatures();
+            nlu.NluFeature[] features = instance.getFeatures();
             for (int i = 0; i < functions.size(); i++) {
                 empirical_expects[i] += functions.get(i).apply(features, y);
             }
@@ -174,8 +174,8 @@ public class MaxEntNlu {
         while (iters < 50) {
             f_newton = df_newton = 0;
 
-            for (InstanceNlu instance : instances) {
-                NluFeature[] feature = instance.getFeatures();
+            for (nlu.InstanceNlu instance : instances) {
+                nlu.NluFeature[] feature = instance.getFeatures();
                 int index = features.indexOf(feature);
                 for (int y = 0; y < labels.size(); y++) {
                     int f_sharp = apply_f_sharp(feature, y);
@@ -202,7 +202,7 @@ public class MaxEntNlu {
         throw new RuntimeException("IIS did not converge");
     }
 
-    private int apply_f_sharp(NluFeature[] feature, int y) {
+    private int apply_f_sharp(nlu.NluFeature[] feature, int y) {
 
         int sum = 0;
         for (FeatureFunctionNlu function : functions) {
@@ -215,16 +215,16 @@ public class MaxEntNlu {
     class FeatureFunctionNlu {
 
         private int index;
-        private NluFeature value;
+        private nlu.NluFeature value;
         private String label;
 
-        FeatureFunctionNlu(int index, NluFeature value, String label) {
+        FeatureFunctionNlu(int index, nlu.NluFeature value, String label) {
             this.index = index;
             this.value = value;
             this.label = label;
         }
 
-        public int apply(NluFeature[] sentenceBigrams, String label) {
+        public int apply(nlu.NluFeature[] sentenceBigrams, String label) {
             if (index > (sentenceBigrams.length - 1)) {
                 return 0;
             }
